@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# local environment
+.env
+.env.*
+!.env.example
+
+# OS and tooling
+.DS_Store
+*.log
+.codex/
+.agents/
+AGENTS.md
+
+# Synced ChatGPT project references are not application source
+sources/
