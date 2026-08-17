@@ -2,6 +2,10 @@
 
 「不渡／許哲維」互動式網站 MVP：一個看似正常的小說作者官網，逐漸遭到《當群星墜落》的世界侵蝕。
 
+## 線上版本
+
+[進入不渡官方網站](https://iewiepeity.github.io/budu-interactive-archive/)
+
 ## MVP 內容
 
 - 不渡作者官網與作品介紹
