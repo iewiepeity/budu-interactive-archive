@@ -1,0 +1,5 @@
+"use client";
+import Link from "next/link";
+import { ArrowLeft, RotateCcw } from "lucide-react";
+import { useArchive } from "@/components/ArchiveProvider";
+export default function ArchivePage(){const a=useArchive();return <main className="save-page"><Link href="/desk" className="back"><ArrowLeft size={16}/> 返回工作桌</Link><header><p className="eyebrow">READER SAVE DATA</p><h1>你的世界線</h1><p>資料儲存在這台裝置。清除後，世界會假裝從未見過你。</p></header><section className="save-slot"><div><small>SLOT 01 · AUTO SAVE</small><b>{a.flags.includes("prologue-complete")?"第二集・失序／王城地牢之後":"序章／王城地牢"}</b></div><dl><div><dt>周目</dt><dd>{a.playthroughs||1}</dd></div><div><dt>許哲維好感度</dt><dd>+{a.affection}</dd></div><div><dt>魔法傾向</dt><dd>{a.magicType??"尚未覺醒"}</dd></div><div><dt>偏差紀錄</dt><dd>{a.flags.length}</dd></div><div><dt>徽章</dt><dd>{a.badges.length}/5</dd></div></dl><nav><Link href="/read/prologue">繼續這條世界線</Link><Link href="/quiz">重新測驗魔法</Link></nav></section>{a.playthroughs>0&&<p className="new-game-note">NEW GAME+ 已啟用：再次進入序章時，某些文字可能記得你。</p>}<button className="danger-reset" onClick={()=>confirm("確定清除所有閱讀紀錄？這次真的不會幫你留備份。")&&a.reset()}><RotateCcw/> 清除整條世界線</button></main>}
