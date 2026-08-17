@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Heart, RotateCcw } from "lucide-react";
+import Image from "next/image";
 import { useArchive } from "./ArchiveProvider";
 
 type Choice = { text: string; next: string; affection?: number; badges?: string[] };
@@ -31,11 +32,11 @@ const story: Record<string, Node> = {
 };
 
 export function StoryEngine() {
-  const archive = useArchive(); const [id, setId] = useState("wake"); const [phase, setPhase] = useState<"original"|"glitch"|"warped">("original"); const node = story[id];
+  const archive = useArchive(); const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""; const [id, setId] = useState("wake"); const [phase, setPhase] = useState<"original"|"glitch"|"warped">("original"); const node = story[id];
   useEffect(() => { archive.unlock("first-visit"); }, []); // eslint-disable-line
   useEffect(() => { if (!node.distortion) return; setPhase("original"); const a=setTimeout(()=>setPhase("glitch"),850); const b=setTimeout(()=>{setPhase("warped"); archive.unlock("only-listener"); archive.unlock("spoiler-blocked");},1450); return()=>{clearTimeout(a);clearTimeout(b)}; }, [id]); // eslint-disable-line
   const advance = (choice?: Choice) => { if (choice?.affection) archive.addAffection(choice.affection); choice?.badges?.forEach(archive.unlock); setId(choice?.next || node.next || id); };
-  return <main className="story"><div className="story-bg"><div className="bars"/><div className="torch one"/><div className="torch two"/></div><header className="story-hud"><div><small>當群星墜落</small><b>序章　王城地牢</b></div><div className="affection"><Heart size={15} fill="currentColor"/> 許哲維 <b>{archive.affection > 0 ? `+${archive.affection}` : "—"}</b></div></header>
+  return <main className="story"><div className="story-bg"><div className="bars"/><div className="torch one"/><div className="torch two"/></div><div className="story-character"><Image src={`${basePath}/images/xu-zhewei-dungeon.jpeg`} alt="王城地牢中的許哲維" fill priority/></div><header className="story-hud"><div><small>當群星墜落</small><b>序章　王城地牢</b></div><div className="affection"><Heart size={15} fill="currentColor"/> 許哲維 <b>{archive.affection > 0 ? `+${archive.affection}` : "—"}</b></div></header>
     <section className="story-panel"><p className="scene-label">ROYAL DUNGEON · 00:13</p>{node.speaker && <p className={`speaker ${node.npc ? "npc" : ""}`}>{node.speaker}</p>}
       {node.distortion ? <div className={`distortion ${phase}`}><span className="original">{node.distortion.original}</span><span className="warped">「{node.distortion.warped}」<em>（{node.distortion.original}）</em></span></div> : <p className="story-text">{node.text}</p>}
       {node.aside && <p className="aside">{node.aside}</p>}
