@@ -11,7 +11,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return <>
     <header className="nav">
       <Link href="/" className="brand"><span>不渡</span><small>BU DU · AUTHOR ARCHIVE</small></Link>
-      <nav><Link href="/#about">關於</Link><Link href="/#works">作品</Link><button onClick={() => setOpen(true)} className="badge-button">徽章 {archive.badges.length}<i>/5</i></button></nav>
+      <nav><Link href="/author">作者</Link><Link href="/#works">作品</Link><Link href="/community">讀者社群</Link><button onClick={() => setOpen(true)} className="badge-button">徽章 {archive.badges.length}<i>/5</i></button></nav>
     </header>
     {children}
     <footer><span>© 2026 不渡・著作權所有</span><span>本站內容皆為虛構。</span></footer>

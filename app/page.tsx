@@ -26,6 +26,7 @@ export default function Home() {
       <div className="work-list"><article><div className="book book-moon official"><Image src={`${basePath}/images/flowing-years-moon.png`} alt="《流年望月》封面" fill sizes="235px"/><div className="moon-cover-type"><strong>流年<br/>望月</strong><span>不渡・著</span></div></div><div><small>DEBUT NOVEL · 2021</small><h3>流年望月</h3><p>有些人用一生等一個月圓，有些人等到的只有天亮。</p><div className="rating"><b>{worksPraise.moon.score}</b><span>★★★★★</span><small>{worksPraise.moon.count} 位讀者評分</small></div><blockquote>「{worksPraise.moon.quote}」<cite>{worksPraise.moon.author}</cite></blockquote></div></article>
       <Link href="/works/stars" className="work-link" onClick={() => archive.disturb(1)}><article><div className="book book-stars official"><Image src={`${basePath}/images/when-the-stars-fall.png`} alt="《當群星墜落》封面" fill sizes="235px"/></div><div><small>FANTASY SERIES · COMPLETE</small><h3>當群星墜落</h3><p>群星墜下的那一夜，世界原本的秩序開始崩落。</p><div className="rating"><b>{worksPraise.stars.score}</b><span>★★★★★</span><small>{worksPraise.stars.count} 位讀者評分</small></div><blockquote>「{worksPraise.stars.quote}」<cite>{worksPraise.stars.author}</cite></blockquote><b>查看作品 <ArrowUpRight size={18}/></b></div></article></Link></div>
     </section>
+    <section className="community-teaser"><p className="eyebrow">READER COMMUNITY</p><h2>大家本來只是在催第五集。</h2><p>論壇、噗浪與串文的最後存檔顯示：不渡寫完了最後一個字，卻從來沒有按下上傳。</p><Link href="/community">查看網路考古紀錄 <ArrowUpRight size={17}/></Link></section>
     {archive.anomaly >= 3 && <div className="intrusion" aria-hidden="true">第二集・失序　//　你已經讀過了</div>}
   </main>;
 }
