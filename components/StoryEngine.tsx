@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Heart, RotateCcw } from "lucide-react";
 import Image from "next/image";
 import { useArchive } from "./ArchiveProvider";
+import { StoryCommands } from "./StoryCommands";
 
 type Choice = { text: string; next: string; affection?: number; badges?: string[] };
 type Node = { speaker?: string; text: string; aside?: string; choices?: Choice[]; next?: string; npc?: boolean; distortion?: { original: string; warped: string } };
@@ -41,5 +42,5 @@ export function StoryEngine() {
       {node.distortion ? <div className={`distortion ${phase}`}><span className="original">{node.distortion.original}</span><span className="warped">「{node.distortion.warped}」<em>（{node.distortion.original}）</em></span></div> : <p className="story-text">{node.text}</p>}
       {node.aside && <p className="aside">{node.aside}</p>}
       <div className="choices">{node.choices?.map((c,i)=><button key={c.text} onClick={()=>advance(c)}><span>0{i+1}</span>{c.text}</button>)}{node.next && (!node.distortion || phase === "warped") && <button className="next" onClick={()=>advance()}>{id === "end" ? <RotateCcw size={16}/> : "繼續"}</button>}{id === "end" && <a className="loveydovey-link" href="https://loveydovey.onelink.me/vs4G/82ox43ko" target="_blank" rel="noreferrer"><small>CONTINUE WITH XU ZHEWEI</small><b>前往卿卿我我，繼續與許哲維互動</b></a>}</div>
-    </section><p className="story-note">NPC 只能聽見被修正後的內容。</p></main>;
+    </section><StoryCommands scene={id} affection={archive.affection}/><p className="story-note">NPC 只能聽見被修正後的內容。</p></main>;
 }
