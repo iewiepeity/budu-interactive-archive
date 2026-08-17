@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { FastForward, Heart, RotateCcw, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useArchive } from "./ArchiveProvider";
 import { StoryCommands } from "./StoryCommands";
 
-type Choice = { text: string; next: string; affection?: number; badges?: string[]; flag?: string; complete?: boolean };
+type Choice = { text: string; next: string; affection?: number; badges?: string[]; flag?: string; complete?: boolean; quiz?: boolean };
 type Node = { speaker?: string; text: string; aside?: string; choices?: Choice[]; next?: string; npc?: boolean; distortion?: { original: string; warped: string } };
 const story: Record<string, Node> = {
   wake: { text: "許哲維坐在冰冷的地牢石板上，背靠著粗糙的石牆，一肚子火無處發洩。\n\n他媽的。\n操。\n\n幾小時前，他才剛在現實世界的電腦前敲下《當群星墜落》第五集的最後一個字。成就感與疲憊還沒散去，下一秒，整個世界就在他眼前天旋地轉。", next: "recognize" },
@@ -32,7 +33,7 @@ const story: Record<string, Node> = {
   after: { speaker: "許哲維", text: "等一下。\n\n你不是我寫的人。", choices: [{ text: "你也不是這個世界的人。", next: "escape", affection: 1 }, { text: "所以，這裡真的是你的小說？", next: "escape" }] },
   escape: { text: "牢房外傳來巡衛的腳步聲。\n\n第一集已經結束。第二集《失序》即將開始。\n\n而原著裡，從來沒有兩個穿越者。\n\n哲維看了眼鐵門，又看向你。\n\n『好。先出去。你有沒有什麼不會讓我們罪名變得更色情的辦法？』", aside: "選擇你的逃獄方式。這會留在目前世界線。", choices: [
     {text:"裝瘋，把守衛騙進來",next:"escape-act",flag:"escape-act",affection:1},
-    {text:"握住欄杆，試著喚醒魔法",next:"escape-magic",flag:"escape-magic"},
+    {text:"握住欄杆，試著喚醒魔法",next:"escape-magic",flag:"escape-magic",quiz:true},
     {text:"要求再見王儲一次",next:"escape-prince",flag:"escape-prince",affection:-1},
     {text:"偷走巡衛腰間的鑰匙",next:"escape-key",flag:"escape-key",affection:1}
   ]},
@@ -57,11 +58,11 @@ const story: Record<string, Node> = {
 };
 
 export function StoryEngine() {
-  const archive = useArchive(); const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""; const [id, setId] = useState("wake"); const [phase, setPhase] = useState<"original"|"glitch"|"warped">("original"); const node = story[id];
+  const archive = useArchive(); const router=useRouter(); const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ""; const [id, setId] = useState("wake"); const [phase, setPhase] = useState<"original"|"glitch"|"warped">("original"); const node = story[id];
   const magicStart=()=>{const type=archive.magicType||"";const route=type.includes("星軌")?"power-star":type.includes("庇護")?"power-ward":type.includes("改寫")?"power-rewrite":type.includes("記憶")?"power-echo":"power-desire";setId(route)};
   useEffect(() => { archive.unlock("first-visit"); }, []); // eslint-disable-line
   useEffect(() => { if (!node.distortion) return; setPhase("original"); const a=setTimeout(()=>setPhase("glitch"),850); const b=setTimeout(()=>{setPhase("warped"); archive.unlock("only-listener"); archive.unlock("spoiler-blocked");},1450); return()=>{clearTimeout(a);clearTimeout(b)}; }, [id]); // eslint-disable-line
-  const advance = (choice?: Choice) => { if (choice?.affection) archive.addAffection(choice.affection); choice?.badges?.forEach(archive.unlock); if(choice?.flag) archive.mark(choice.flag); if(choice?.complete) archive.completeRun(); setId(choice?.next || node.next || id); };
+  const advance = (choice?: Choice) => { if(choice?.quiz){archive.mark("magic-awakening-triggered");archive.mark("escape-magic");if(archive.magicType) magicStart();else router.push("/quiz");return} if (choice?.affection) archive.addAffection(choice.affection); choice?.badges?.forEach(archive.unlock); if(choice?.flag) archive.mark(choice.flag); if(choice?.complete) archive.completeRun(); setId(choice?.next || node.next || id); };
   return <main className="story"><div className="story-bg"><div className="bars"/><div className="torch one"/><div className="torch two"/></div><div className="story-character"><Image src={`${basePath}/images/xu-zhewei-dungeon.jpeg`} alt="王城地牢中的許哲維" fill priority/></div><header className="story-hud"><div><small>當群星墜落</small><b>序章　王城地牢</b></div><div className="affection"><Heart size={15} fill="currentColor"/> 許哲維 <b>{archive.affection > 0 ? `+${archive.affection}` : "—"}</b></div></header>
     <section className="story-panel"><p className="scene-label">ROYAL DUNGEON · 00:13</p>{id==="wake"&&archive.playthroughs>0&&<p className="ng-memory">你很確定，這不是第一次在這裡醒來。</p>}{id==="wake"&&archive.magicType&&<button className="story-skip" onClick={magicStart}><FastForward size={16}/><span><small>已讀劇情略過</small><b>以「{archive.magicType}」從越獄後繼續</b></span></button>}{node.speaker && <p className={`speaker ${node.npc ? "npc" : ""}`}>{node.speaker}</p>}
       {node.distortion ? <div className={`distortion ${phase}`}><span className="original">{node.distortion.original}</span><span className="warped">「{node.distortion.warped}」<em>（{node.distortion.original}）</em></span></div> : <p className="story-text">{node.text}</p>}
