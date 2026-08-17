@@ -24,9 +24,9 @@ const story: Record<string, Node> = {
   first: { speaker: "許哲維", text: "……喂。\n\n你看起來不像這裡的人。你又是怎麼進來的？", choices: [
     { text: "我也剛醒來。", next: "after", affection: 1 }, { text: "你剛才那些話，我全都聽懂了。", next: "listener", badges: ["only-listener", "spoiler-blocked"] }, { text: "先說，你真的暗戀王儲？", next: "underwear", affection: 1, badges: ["underwear"] }
   ]},
-  listener: { speaker: "許哲維", text: "……三小？\n\n妳聽懂哪一句？", choices: [{ text: "格林頓和白嶺村會被魔蝠襲擊。", next: "after", affection: 2 }, { text: "群星墜落的真相。", next: "after", affection: 2 }] },
+  listener: { speaker: "許哲維", text: "……三小？\n\n你聽懂哪一句？", choices: [{ text: "格林頓和白嶺村會被魔蝠襲擊。", next: "after", affection: 2 }, { text: "群星墜落的真相。", next: "after", affection: 2 }] },
   underwear: { speaker: "許哲維", text: "幹。不是。\n\n我也沒要借他內褲。", aside: "許哲維好感度 +1", next: "after" },
-  after: { speaker: "許哲維", text: "等一下。\n\n妳不是我寫的人。", choices: [{ text: "你也不是這個世界的人。", next: "end", affection: 1 }, { text: "所以，這裡真的是你的小說？", next: "end" }] },
+  after: { speaker: "許哲維", text: "等一下。\n\n你不是我寫的人。", choices: [{ text: "你也不是這個世界的人。", next: "end", affection: 1 }, { text: "所以，這裡真的是你的小說？", next: "end" }] },
   end: { text: "牢房外傳來巡衛的腳步聲。\n\n第一集已經結束。第二集《失序》即將開始。\n\n而原著裡，從來沒有兩個穿越者。", aside: "首場・完", choices: [{ text: "重新開始", next: "wake" }] }
 };
 
